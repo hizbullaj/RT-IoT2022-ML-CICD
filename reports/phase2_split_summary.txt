@@ -1,0 +1,50 @@
+Loaded: (123117, 85)
+
+--- 'no' column: min / max / count per class ---
+                            min    max  count
+Attack_type                                  
+ARP_poisioning                0   7749   7750
+DDOS_Slowloris                0    533    534
+DOS_SYN_Hping                 0  94658  94659
+MQTT_Publish                  0   4145   4146
+Metasploit_Brute_Force_SSH    0     36     37
+NMAP_FIN_SCAN                 0     27     28
+NMAP_OS_DETECTION             0   1999   2000
+NMAP_TCP_scan                 0   1001   1002
+NMAP_UDP_SCAN                 0   2589   2590
+NMAP_XMAS_TREE_SCAN           0   2009   2010
+Thing_Speak                   0   8107   8108
+Wipro_bulb                    0    252    253
+'no' unique values: 94659 of 123117 rows
+
+Rows removed for NaN/inf: 0
+Features after dropping 'no' and target: 83
+
+Rows that have an identical twin (features only): 10158
+Duplicate groups with CONFLICTING labels: 6
+
+Train rows: 98493   Test rows: 24624
+Test rows whose features also appear in train: 1662 of 24624 (6.75%)
+
+--- Class counts per split ---
+                            train   test
+Attack_type                             
+DOS_SYN_Hping               75727  18932
+Thing_Speak                  6486   1622
+ARP_poisioning               6200   1550
+MQTT_Publish                 3317    829
+NMAP_UDP_SCAN                2072    518
+NMAP_XMAS_TREE_SCAN          1608    402
+NMAP_OS_DETECTION            1600    400
+NMAP_TCP_scan                 802    200
+DDOS_Slowloris                427    107
+Wipro_bulb                    202     51
+Metasploit_Brute_Force_SSH     30      7
+NMAP_FIN_SCAN                  22      6
+
+--- Text column codes ---
+proto: {'icmp': 0, 'tcp': 1, 'udp': 2}
+service: {'-': 0, 'dhcp': 1, 'dns': 2, 'http': 3, 'irc': 4, 'mqtt': 5, 'ntp': 6, 'radius': 7, 'ssh': 8, 'ssl': 9}
+
+--- Target codes ---
+{'ARP_poisioning': 0, 'DDOS_Slowloris': 1, 'DOS_SYN_Hping': 2, 'MQTT_Publish': 3, 'Metasploit_Brute_Force_SSH': 4, 'NMAP_FIN_SCAN': 5, 'NMAP_OS_DETECTION': 6, 'NMAP_TCP_scan': 7, 'NMAP_UDP_SCAN': 8, 'NMAP_XMAS_TREE_SCAN': 9, 'Thing_Speak': 10, 'Wipro_bulb': 11}

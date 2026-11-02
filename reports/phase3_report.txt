@@ -1,0 +1,98 @@
+Train: (98493, 83)   Test: (24624, 83)   Classes: 12
+Test rows with no copy in train: 22962 of 24624
+
+================ LightGBM ================
+Training time: 9.1 seconds
+accuracy: 0.9268
+precision_macro: 0.4639
+recall_macro: 0.4748
+f1_macro: 0.4611
+precision_weighted: 0.9223
+recall_weighted: 0.9268
+f1_weighted: 0.9225
+auc_roc_macro_ovr: 0.7349
+accuracy_unseen_rows_only: 0.9250
+f1_macro_unseen_rows_only: 0.4639
+train_seconds: 9.0997
+
+Per-class results:
+                            precision  recall  f1-score  support
+ARP_poisioning                 0.7850  0.7277    0.7553   1550.0
+DDOS_Slowloris                 0.0000  0.0000    0.0000    107.0
+DOS_SYN_Hping                  0.9880  0.9859    0.9870  18932.0
+MQTT_Publish                   0.8057  0.8203    0.8129    829.0
+Metasploit_Brute_Force_SSH     0.0000  0.0000    0.0000      7.0
+NMAP_FIN_SCAN                  0.0000  0.0000    0.0000      6.0
+NMAP_OS_DETECTION              0.8060  0.7375    0.7702    400.0
+NMAP_TCP_scan                  0.5691  0.5350    0.5515    200.0
+NMAP_UDP_SCAN                  0.4776  0.8629    0.6149    518.0
+NMAP_XMAS_TREE_SCAN            0.3294  0.1393    0.1958    402.0
+Thing_Speak                    0.8056  0.8890    0.8453   1622.0
+Wipro_bulb                     0.0000  0.0000    0.0000     51.0
+
+Biggest mistakes (true class -> predicted class: count):
+  NMAP_XMAS_TREE_SCAN -> NMAP_UDP_SCAN: 192
+  DOS_SYN_Hping -> NMAP_UDP_SCAN: 174
+  ARP_poisioning -> DOS_SYN_Hping: 142
+  MQTT_Publish -> Thing_Speak: 130
+  NMAP_XMAS_TREE_SCAN -> ARP_poisioning: 117
+
+================ XGBoost ================
+Training time: 31.5 seconds
+accuracy: 0.9983
+precision_macro: 0.9841
+recall_macro: 0.9763
+f1_macro: 0.9792
+precision_weighted: 0.9983
+recall_weighted: 0.9983
+f1_weighted: 0.9983
+auc_roc_macro_ovr: 1.0000
+accuracy_unseen_rows_only: 0.9983
+f1_macro_unseen_rows_only: 0.9842
+train_seconds: 31.5258
+
+Per-class results:
+                            precision  recall  f1-score  support
+ARP_poisioning                 0.9878  0.9929    0.9903   1550.0
+DDOS_Slowloris                 0.9903  0.9533    0.9714    107.0
+DOS_SYN_Hping                  1.0000  1.0000    1.0000  18932.0
+MQTT_Publish                   1.0000  0.9976    0.9988    829.0
+Metasploit_Brute_Force_SSH     0.8750  1.0000    0.9333      7.0
+NMAP_FIN_SCAN                  1.0000  0.8333    0.9091      6.0
+NMAP_OS_DETECTION              1.0000  1.0000    1.0000    400.0
+NMAP_TCP_scan                  1.0000  1.0000    1.0000    200.0
+NMAP_UDP_SCAN                  0.9866  0.9923    0.9894    518.0
+NMAP_XMAS_TREE_SCAN            0.9975  0.9950    0.9963    402.0
+Thing_Speak                    0.9926  0.9908    0.9917   1622.0
+Wipro_bulb                     0.9800  0.9608    0.9703     51.0
+
+Biggest mistakes (true class -> predicted class: count):
+  Thing_Speak -> ARP_poisioning: 14
+  ARP_poisioning -> Thing_Speak: 10
+  DDOS_Slowloris -> NMAP_UDP_SCAN: 5
+  Wipro_bulb -> Thing_Speak: 2
+  NMAP_UDP_SCAN -> ARP_poisioning: 2
+
+================ SIDE-BY-SIDE ================
+model                      LightGBM  XGBoost
+accuracy                     0.9268   0.9983
+precision_macro              0.4639   0.9841
+recall_macro                 0.4748   0.9763
+f1_macro                     0.4611   0.9792
+precision_weighted           0.9223   0.9983
+recall_weighted              0.9268   0.9983
+f1_weighted                  0.9225   0.9983
+auc_roc_macro_ovr            0.7349   1.0000
+accuracy_unseen_rows_only    0.9250   0.9983
+f1_macro_unseen_rows_only    0.4639   0.9842
+train_seconds                9.0997  31.5258
+
+--- The two rare classes (recall, test rows) ---
+Metasploit_Brute_Force_SSH | LightGBM: recall=0.000, f1=0.000, test rows=7
+Metasploit_Brute_Force_SSH | XGBoost: recall=1.000, f1=0.933, test rows=7
+NMAP_FIN_SCAN | LightGBM: recall=0.000, f1=0.000, test rows=6
+NMAP_FIN_SCAN | XGBoost: recall=0.833, f1=0.909, test rows=6
+
+WINNER (highest macro F1, then accuracy): XGBoost
+
+WARNING: accuracy is above 99%. Checks so far: 'no' column dropped; 6.75% of test rows have a copy in train. Compare 'accuracy_unseen_rows_only' to 'accuracy' above before trusting these scores.

@@ -1,0 +1,17 @@
+{
+  "id.resp_p": 21.0,
+  "active.min": 0.953674,
+  "bwd_pkts_payload.std": 0.0,
+  "service": 0.0,
+  "fwd_last_window_size": 64.0,
+  "fwd_URG_flag_count": 0.0,
+  "fwd_header_size_tot": 20.0,
+  "flow_iat.min": 0.953674,
+  "fwd_header_size_min": 20.0,
+  "bwd_pkts_payload.avg": 0.0,
+  "fwd_iat.min": 0.0,
+  "fwd_pkts_payload.min": 120.0,
+  "fwd_init_window_size": 64.0,
+  "flow_duration": 1e-06,
+  "fwd_header_size_max": 20.0
+}

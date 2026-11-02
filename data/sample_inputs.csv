@@ -1,0 +1,2 @@
+id.resp_p,active.min,bwd_pkts_payload.std,service,fwd_last_window_size,fwd_URG_flag_count,fwd_header_size_tot,flow_iat.min,fwd_header_size_min,bwd_pkts_payload.avg,fwd_iat.min,fwd_pkts_payload.min,fwd_init_window_size,flow_duration,fwd_header_size_max
+21,0.953674,0.0,0.0,64,0,20,0.953674,20,0.0,0.0,120.0,64,1e-06,20

@@ -1,0 +1,95 @@
+Train: (98493, 83)   Test: (24624, 83)
+
+=== Step 1: ranking features with LightGBM (training data only) ===
+Top 20 features (share of total gain):
+id.resp_p               0.3161
+active.min              0.1051
+bwd_pkts_payload.std    0.0767
+service                 0.0654
+fwd_last_window_size    0.0635
+fwd_URG_flag_count      0.0616
+fwd_header_size_tot     0.0401
+flow_iat.min            0.0361
+fwd_header_size_min     0.0353
+bwd_pkts_payload.avg    0.0350
+fwd_iat.min             0.0272
+fwd_pkts_payload.min    0.0158
+fwd_init_window_size    0.0148
+flow_duration           0.0144
+fwd_header_size_max     0.0086
+fwd_pkts_payload.max    0.0084
+fwd_pkts_payload.tot    0.0063
+id.orig_p               0.0057
+bwd_init_window_size    0.0054
+fwd_PSH_flag_count      0.0054
+Top 10 together hold 83.5% of total gain.
+NOTE: id.resp_p is in the top 5. Port numbers can carry tool-specific patterns, so treat that with some care.
+
+Training LightGBM on all 83 features ...
+   done in 47.3s  accuracy=0.9987  macro F1=0.9813
+
+Training LightGBM on top 10 features ...
+   done in 22.1s  accuracy=0.9968  macro F1=0.9585
+
+Training LightGBM on top 12 features ...
+   done in 24.8s  accuracy=0.9974  macro F1=0.9629
+
+Training LightGBM on top 15 features ...
+   done in 26.3s  accuracy=0.9976  macro F1=0.9649
+
+Training XGBoost on all 83 features ...
+   done in 33.4s  accuracy=0.9983  macro F1=0.9792
+
+Training XGBoost on top 10 features ...
+   done in 12.3s  accuracy=0.9961  macro F1=0.9666
+
+Training XGBoost on top 12 features ...
+   done in 12.3s  accuracy=0.9972  macro F1=0.9531
+
+Training XGBoost on top 15 features ...
+   done in 12.6s  accuracy=0.9972  macro F1=0.9599
+
+=== Comparison (test set) ===
+   model  features  accuracy  precision_macro  recall_macro  f1_macro  auc_roc_macro_ovr  accuracy_unseen_only  unseen_rows  recall_Metasploit  recall_FIN_SCAN  zero_recall_classes  d_accuracy_vs_all  d_f1_macro_vs_all
+LightGBM        83    0.9987           0.9874        0.9774    0.9813             1.0000                0.9987        22962             1.0000           0.8333                    0             0.0000             0.0000
+LightGBM        10    0.9968           0.9611        0.9561    0.9585             0.9999                0.9870         4467             0.8571           0.8333                    0            -0.0019            -0.0228
+LightGBM        12    0.9974           0.9574        0.9709    0.9629             1.0000                0.9893         4507             1.0000           0.8333                    0            -0.0013            -0.0184
+LightGBM        15    0.9976           0.9580        0.9743    0.9649             1.0000                0.9907         4517             1.0000           0.8333                    0            -0.0011            -0.0164
+ XGBoost        83    0.9983           0.9841        0.9763    0.9792             1.0000                0.9983        22962             1.0000           0.8333                    0             0.0000             0.0000
+ XGBoost        10    0.9961           0.9823        0.9534    0.9666             0.9999                0.9863         4467             0.8571           0.8333                    0            -0.0022            -0.0127
+ XGBoost        12    0.9972           0.9511        0.9561    0.9531             1.0000                0.9882         4507             0.8571           0.8333                    0            -0.0011            -0.0261
+ XGBoost        15    0.9972           0.9607        0.9591    0.9599             1.0000                0.9887         4517             0.8571           0.8333                    0            -0.0011            -0.0194
+
+No feature count stayed within 0.01 macro F1 for both models. Using 15 anyway.
+FINAL MODEL: LightGBM on 15 features
+Features: id.resp_p, active.min, bwd_pkts_payload.std, service, fwd_last_window_size, fwd_URG_flag_count, fwd_header_size_tot, flow_iat.min, fwd_header_size_min, bwd_pkts_payload.avg, fwd_iat.min, fwd_pkts_payload.min, fwd_init_window_size, flow_duration, fwd_header_size_max
+
+=== Final model: all six metrics (macro-averaged) ===
+accuracy: 0.9976
+precision_macro: 0.9580
+recall_macro: 0.9743
+f1_macro: 0.9649
+auc_roc_macro_ovr: 1.0000
+accuracy_unseen_only: 0.9907
+unseen_rows: 4517
+recall_Metasploit: 1.0000
+recall_FIN_SCAN: 0.8333
+zero_recall_classes: 0
+train_seconds: 24.9948
+
+WARNING: accuracy is above 99%. Checks done: 'no' dropped; duplicate overlap measured. Accuracy on unseen-only rows = 0.9907 (4517 rows). Compare it with the accuracy above.
+
+Per-class results (final model):
+                            precision  recall  f1-score  support
+ARP_poisioning                 0.9828  0.9942    0.9885   1550.0
+DDOS_Slowloris                 0.9519  0.9252    0.9384    107.0
+DOS_SYN_Hping                  1.0000  1.0000    1.0000  18932.0
+MQTT_Publish                   1.0000  0.9976    0.9988    829.0
+Metasploit_Brute_Force_SSH     0.7778  1.0000    0.8750      7.0
+NMAP_FIN_SCAN                  0.8333  0.8333    0.8333      6.0
+NMAP_OS_DETECTION              1.0000  1.0000    1.0000    400.0
+NMAP_TCP_scan                  1.0000  1.0000    1.0000    200.0
+NMAP_UDP_SCAN                  0.9750  0.9807    0.9779    518.0
+NMAP_XMAS_TREE_SCAN            1.0000  0.9950    0.9975    402.0
+Thing_Speak                    0.9944  0.9846    0.9895   1622.0
+Wipro_bulb                     0.9804  0.9804    0.9804     51.0

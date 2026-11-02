@@ -1,0 +1,291 @@
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">S</div>
+      <div>
+        <h2>Sentinel<span>AI</span></h2>
+        <small>NETWORK SECURITY</small>
+      </div>
+    </div>
+
+    <div class="sidebar-label">MAIN MENU</div>
+
+    <nav>
+      <a class="nav-link active">
+        <span>▦</span> Dashboard
+      </a>
+      <a class="nav-link">
+        <span>⌁</span> Attack Detection
+      </a>
+      <a class="nav-link">
+        <span>◈</span> Model Insights
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="security-card">
+        <div class="security-icon">✦</div>
+        <strong>AI Protection</strong>
+        <p>Powered by machine learning and network traffic analysis.</p>
+        <span class="security-status">● Model loaded</span>
+      </div>
+
+      <div class="sidebar-footer">
+        RT-IoT2022 Dataset<br>
+        <span>ML Detection System</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <header class="topbar">
+      <div>
+        <div class="breadcrumb">Workspace / <strong>Dashboard</strong></div>
+        <h1>Security Dashboard</h1>
+        <p class="page-subtitle">
+          Intelligent network traffic classification and attack detection.
+        </p>
+      </div>
+
+      <div class="topbar-right">
+        <div class="api-indicator">
+          <span [class.online-dot]="apiOnline"
+                [class.offline-dot]="!apiOnline"></span>
+          API {{ apiOnline ? 'Online' : 'Offline' }}
+        </div>
+        <div class="profile">
+          <div class="avatar">AI</div>
+          <div>
+            <strong>ML System</strong>
+            <small>Administrator</small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Welcome -->
+    <section class="welcome-panel">
+      <div>
+        <div class="eyebrow">NETWORK INTELLIGENCE PLATFORM</div>
+        <h2>Detect threats. Protect networks.</h2>
+        <p>
+          Analyze network traffic using your trained LightGBM classification model.
+        </p>
+      </div>
+      <div class="welcome-symbol">⌘</div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>ML Model</span>
+          <span class="stat-icon blue">◈</span>
+        </div>
+        <h2>LightGBM</h2>
+        <p>Classification algorithm</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Input Features</span>
+          <span class="stat-icon purple">▤</span>
+        </div>
+        <h2>15</h2>
+        <p>Selected network features</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Attack Classes</span>
+          <span class="stat-icon orange">⚡</span>
+        </div>
+        <h2>12</h2>
+        <p>Classification categories</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Backend Status</span>
+          <span class="stat-icon green">⌁</span>
+        </div>
+        <h2>{{ apiOnline ? 'Online' : 'Offline' }}</h2>
+        <p>Flask prediction service</p>
+      </div>
+    </section>
+
+    <!-- Prediction Workspace -->
+    <section class="workspace-grid">
+
+      <div class="panel input-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="section-tag">ANALYSIS ENGINE</div>
+            <h2>Traffic Analysis</h2>
+            <p>Enter the 15 network traffic features below.</p>
+          </div>
+          <div class="heading-icon">⌘</div>
+        </div>
+
+        <div class="form-toolbar">
+          <span class="field-count">15 FEATURES REQUIRED</span>
+          <button class="sample-button" type="button"
+                  (click)="loadSample()">
+            ↧ Load Sample
+          </button>
+        </div>
+
+        <form (ngSubmit)="predict()" #predictionForm="ngForm">
+
+          <div class="feature-grid">
+            @for (feature of features; track feature.key) {
+              <div class="form-field">
+                <label [for]="feature.key">
+                  {{ feature.label }}
+                  <span class="required">*</span>
+                </label>
+
+                @if (feature.key === 'service') {
+                  <select
+                    [id]="feature.key"
+                    [name]="feature.key"
+                    [(ngModel)]="formData[feature.key]"
+                    required>
+                    @for (service of serviceOptions; track service) {
+                      <option [value]="service">{{ service }}</option>
+                    }
+                  </select>
+                } @else {
+                  <input
+                    [id]="feature.key"
+                    [name]="feature.key"
+                    type="number"
+                    step="any"
+                    [(ngModel)]="formData[feature.key]"
+                    required
+                    placeholder="Enter value">
+                }
+
+                <small>{{ feature.description }}</small>
+              </div>
+            }
+          </div>
+
+          <div class="form-actions">
+            <button class="reset-button" type="button"
+                    (click)="resetForm()">
+              ↺ Reset
+            </button>
+
+            <button class="predict-button" type="submit"
+                    [disabled]="loading">
+              @if (loading) {
+                <span class="spinner"></span>
+                Analyzing Traffic...
+              } @else {
+                ⚡ Predict Attack
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Results -->
+      <div class="panel result-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="section-tag">LIVE CLASSIFICATION</div>
+            <h2>Detection Results</h2>
+            <p>Prediction output from your ML model.</p>
+          </div>
+          <div class="heading-icon result-icon">◎</div>
+        </div>
+
+        @if (errorMessage) {
+          <div class="message error-message">
+            <strong>⚠ Something went wrong</strong>
+            <p>{{ errorMessage }}</p>
+          </div>
+        }
+
+        @if (successMessage) {
+          <div class="message success-message">
+            ✓ {{ successMessage }}
+          </div>
+        }
+
+        @if (!result && !errorMessage) {
+          <div class="empty-result">
+            <div class="empty-icon">⌁</div>
+            <h3>Waiting for analysis</h3>
+            <p>
+              Load sample data or enter network features, then click
+              <strong>Predict Attack</strong> to see the result here.
+            </p>
+            <div class="empty-line"></div>
+            <span>READY FOR CLASSIFICATION</span>
+          </div>
+        }
+
+        @if (result) {
+          <div class="prediction-box"
+               [class.attack-result]="predictionIsAttack"
+               [class.safe-result]="!predictionIsAttack">
+            <div class="prediction-label">
+              {{ predictionIsAttack ? '⚠ DETECTED CLASSIFICATION' : '✓ DETECTED CLASSIFICATION' }}
+            </div>
+            <h2>{{ result.prediction }}</h2>
+            <p>
+              {{ predictionIsAttack
+                ? 'The model classified this traffic as a non-benign category.'
+                : 'The model classified this traffic as benign.' }}
+            </p>
+          </div>
+
+          <div class="probability-section">
+            <div class="probability-heading">
+              <h3>Class Probabilities</h3>
+              <span>TOP 6</span>
+            </div>
+
+            @for (item of probabilityRows; track item.name) {
+              <div class="probability-row">
+                <div class="probability-info">
+                  <span>{{ item.name }}</span>
+                  <strong>{{ formatProbability(item.value) }}</strong>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill"
+                       [style.width.%]="item.value * 100">
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="model-info">
+            <span>MODEL USED</span>
+            <strong>{{ result.model }}</strong>
+          </div>
+        }
+
+        <div class="result-note">
+          <span>ⓘ</span>
+          Educational research prototype. Predictions should not be treated
+          as a replacement for professional security monitoring.
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="page-footer">
+      <span>SentinelAI · RT-IoT2022 Network Attack Detection</span>
+      <span>Machine Learning Classification System</span>
+    </footer>
+
+  </main>
+</div>
