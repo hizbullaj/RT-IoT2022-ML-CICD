@@ -23,7 +23,8 @@ interface PredictionResult {
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-
+private readonly apiBaseUrl =
+  'https://rt-iot2022-ml-cicd.onrender.com';
   apiOnline = false;
   loading = false;
   errorMessage = '';
@@ -147,7 +148,7 @@ constructor(private cdr: ChangeDetectorRef) {
 
 async checkApi(): Promise<void> {
   try {
-    const response = await fetch('/health');
+   const response = await fetch(`${this.apiBaseUrl}/health`);
     this.apiOnline = response.ok;
   } catch {
     this.apiOnline = false;
@@ -161,7 +162,7 @@ async checkApi(): Promise<void> {
     this.successMessage = '';
 
     try {
-      const response = await fetch('/sample-input.json');
+      const response = await fetch(new URL('sample-input.json', document.baseURI));
 
       if (!response.ok) {
         throw new Error('Could not load the sample input file.');
@@ -227,7 +228,7 @@ async checkApi(): Promise<void> {
     this.loading = true;
 
     try {
-      const response = await fetch('/predict', {
+      const response = await fetch(`${this.apiBaseUrl}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
